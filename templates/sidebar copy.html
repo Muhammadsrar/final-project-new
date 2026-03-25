@@ -83,7 +83,14 @@
           <a href="{% url 'dashboard' %}" class="sidebar-link">
             <i class="fa-solid fa-chart-line pe-2"></i> Dashboard
           </a>
-        </li>
+        </li> 
+          <!-- ✅ ADD CSV UPLOAD HERE -->
+       <li class="sidebar-item">
+         <a href="{% url 'csv_upload' %}" class="sidebar-link">
+           <i class="fa-solid fa-file-csv pe-2"></i> CSV Upload
+         </a>
+       </li>
+
         <li class="sidebar-item">
           <a href="{% url 'logout' %}" class="sidebar-link">
             <i class="fa-solid fa-right-from-bracket pe-2"></i> Logout

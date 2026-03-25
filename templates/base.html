@@ -90,17 +90,15 @@
                 <!-- Exchange Dropdown -->
                 <li class="nav-item">
                   <a class="nav-link collapsed d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#exchange" role="button" aria-expanded="false" aria-controls="exchange">
-                    <span><i class="fa-solid fa-arrows-rotate me-2"></i> Exchange Requests</span>
+                    <span><i class="fa-solid fa-arrows-rotate me-2"></i> CSV upload</span>
                     <i class="fa-solid fa-chevron-down arrow-icon"></i>
                   </a>
                   <div class="collapse" id="exchange" data-bs-parent="#sidebar">
                     <ul class="nav flex-column ms-3">
                       <li class="nav-item">
-                        <a class="nav-link" href="{% url 'exchange_status' %}"><i class="fa-solid fa-eye me-2"></i> View Requests</a>
+                        <a class="nav-link" href="{% url 'csv_upload' %}"><i class="fa-solid fa-eye me-2"></i>Csv upload data</a>
                       </li>
-                      <li class="nav-item">
-                        <a class="nav-link" href="{% url 'exchanged_books' %}"><i class="fa-solid fa-check me-2"></i> Exchanged Books</a>
-                      </li>
+  
                     </ul>
                   </div>
                 </li>

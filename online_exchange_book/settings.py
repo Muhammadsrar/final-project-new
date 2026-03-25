@@ -41,6 +41,7 @@ INSTALLED_APPS = [
     'book',
     'chat',
     'icp_config',
+    'csv_upload',
 ]
 
 MIDDLEWARE = [

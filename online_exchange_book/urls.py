@@ -33,7 +33,7 @@ urlpatterns = [
     path('chat/', include('chat.urls')),
     # icp URls
     path('icp/', include('icp_config.urls')),
-   
+    path('csv/', include('csv_upload.urls')),
     # path('login/', include('django.contrib.auth.urls')),  # For default login
     path('', index, name= 'index'),
 

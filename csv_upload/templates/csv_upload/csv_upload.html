@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="wrapper">
+
+    <!-- Main Content -->
+    <div class="main">
+        <div class="content p-4">
+
+            <h3>Upload CSV File</h3>
+
+            {% if error %}
+                <div class="alert alert-danger">{{ error }}</div>
+            {% endif %}
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit" class="btn btn-primary">Upload</button>
+            </form>
+
+            <hr>
+
+            {% if data %}
+                <h4>CSV Data:</h4>
+                <table class="table table-bordered">
+                    {% for row in data %}
+                        <tr>
+                            {% for cell in row %}
+                                <td>{{ cell }}</td>
+                            {% endfor %}
+                        </tr>
+                    {% endfor %}
+                </table>
+            {% endif %}
+
+        </div>
+    </div>
+
+</div>
+{% endblock %}
