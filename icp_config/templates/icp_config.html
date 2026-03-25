@@ -1,0 +1,71 @@
+{% extends 'base.html' %}
+{% block title %}ICP Configuration{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg">
+    <div class="card-header form-card-header text-center text-white">
+      <h3>Ideal Customer Profile (ICP) Configuration</h3>
+    </div>
+    <div class="card-body">
+      {% if messages %}
+        {% for message in messages %}
+          <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+          </div>
+        {% endfor %}
+      {% endif %}
+
+      <form method="POST">
+        {% csrf_token %}
+
+        <!-- Industries -->
+        <div class="mb-3">
+          <label for="industries" class="form-label">Target Industries *</label>
+          <input type="text" name="target_industries" id="target_industries" class="form-control"
+                 value="{{ icp.target_industries|default_if_none:'' }}"
+                 placeholder="e.g., Technology, Healthcare" required>
+        </div>
+
+        <!-- Company Size -->
+        <div class="mb-3 row">
+          <div class="col">
+            <label for="min_company_size" class="form-label">Min Company Size *</label>
+            <input type="number" name="min_company_size" id="min_company_size" class="form-control"
+                   value="{{ icp.min_company_size|default_if_none:'' }}" min="1" required>
+          </div>
+          <div class="col">
+            <label for="max_company_size" class="form-label">Max Company Size *</label>
+            <input type="number" name="max_company_size" id="max_company_size" class="form-control"
+                   value="{{ icp.max_company_size|default_if_none:'' }}" min="1" required>
+          </div>
+        </div>
+
+        <!-- Job Roles -->
+        <div class="mb-3">
+          <label for="target_roles" class="form-label">Target Job Roles / Seniority *</label>
+          <input type="text" name="target_roles" id="target_roles" class="form-control"
+                 value="{{ icp.target_roles|default_if_none:'' }}"
+                 placeholder="e.g., Head of Sales, VP Marketing" required>
+        </div>
+
+        <!-- target_regions -->
+        <div class="mb-3">
+          <label for="target_regions" class="form-label">Target regions (Optional)</label>
+          <input type="text" name="target_regions" id="target_regions" class="form-control"
+                 value="{{ icp.target_regions|default_if_none:'' }}"
+                 placeholder="e.g., USA, Europe">
+        </div>
+
+        <!-- Submit -->
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-primary">
+            {% if icp.id %}Update ICP{% else %}Save ICP{% endif %}
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

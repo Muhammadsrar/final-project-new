@@ -1,0 +1,293 @@
+{% include 'includes/header.html' %}
+{% load static %}
+
+<!-- Hero Section -->
+<section class="hero" style="background-image: url('{% static 'images/2.jpg' %}'); background-size: cover; background-position: center; background-attachment: fixed;">
+  <div class="container">
+    <h1>Discover & Exchange Books</h1>
+    <p>Join a vibrant community of book lovers and start sharing books effortlessly.</p>
+    <a href="{% url 'register' %}" class="btn btn-cta mt-3">Get Started</a>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="section bg-light">
+  <div class="container">
+    <h2>How It Works</h2>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="feature-box">
+          <div class="feature-icon"><i class="fas fa-book"></i></div>
+          <h4>List Your Books</h4>
+          <p>Upload books you’re willing to exchange or give away.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <div class="feature-icon"><i class="fas fa-search"></i></div>
+          <h4>Browse & Request</h4>
+          <p>Find books that interest you and request an exchange.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <div class="feature-icon"><i class="fas fa-mail-bulk"></i></div>
+          <h4>Connect & Exchange</h4>
+          <p>Chat with book owners and arrange the exchange.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Book Search and Listing -->
+<section class="section bg-light">
+  <div class="container">
+    <div class="row">
+      <!-- Search -->
+      <div class="col-md-12 mb-4">
+        <div class="card shadow-lg">
+          <div class="card-body">
+            <form id="navbarSearchForm" role="search" action="{% url 'search_books' %}">
+              <div class="input-group">
+                <input class="form-control" type="search" placeholder="Search books..." name="q" value="{{ query|default:'' }}" />
+                <button type="submit" class="btn form-btn"><i class="fas fa-search"></i></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Books -->
+      <div class="col-md-12">
+  <div class="card shadow-lg">
+    <div class="card-body">
+  {% if messages %}
+            {% for message in messages %}
+              <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                {{ message }}
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+              </div>
+            {% endfor %}
+          {% endif %}
+
+      {% if books %}
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+          {% for book in books %}
+            <div class="col">
+              <div class="card h-100 shadow-sm">
+                <div class="card-header form-card-header text-white text-center p-1">
+                  <h5 class="m-0">{{ book.title }}</h5>
+                </div>
+                      <div class="card-body">
+                        <img src="{% if book.image %}{{ book.image.url }}{% else %}{% static 'images/default-book.jpg' %}{% endif %}" alt="Book Image" class="img-fluid mb-3" />
+                        <p class="text-muted"><strong>Author:</strong> {{ book.author }}</p>
+                        <p class="text-muted"><strong>Genre:</strong> {{ book.genre }}</p>
+                        <span class="badge {% if book.status == 'Exchanged' %} bg-danger {% else %} bg-success {% endif %}">{{ book.status }}</span>
+                        <p class="mt-2"><strong>Location:</strong> {{ book.location }}</p>
+                        <p><strong>URL:</strong> <a href="{{ book.url }}" target="_blank">Click here</a></p>
+
+                        <div class="d-flex justify-content-center gap-2 mt-3">
+                          <a href="{% url 'book_details' book.id %}" class="btn btn-info">Details</a>
+                          <button type="button" class="btn btn-success exchange-btn" data-bs-toggle="modal" data-bs-target="#exchangeModal" data-bookid="{{ book.id }}" data-booktitle="{{ book.title }}" {% if book.status == "Exchanged" %} disabled {% endif %}>Exchange</button>
+                          <a href="{% url 'inbox' book.owner.id %}" class="btn btn-warning">Chat</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="alert alert-info">No available books found.</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Exchange Modal -->
+<div class="modal fade" id="exchangeModal" tabindex="-1" aria-labelledby="exchangeModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+<form method="post" id="exchangeForm">
+
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title" id="exchangeModalLabel">Exchange Book: <span id="exchangeBookTitle"></span></h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="selectedBookId" name="book_id" />
+          <div class="mb-3">
+            <label for="seekerBooks" class="form-label">Select one of your books:</label>
+            <select class="form-select" id="seekerBooks" name="seeker_book_id" required></select>
+          </div>
+          <div class="mb-3">
+            <label class="form-label">Books listed by the owner:</label>
+            <ul id="ownerBooksList" class="list-group list-group-flush"></ul>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="submit" class="btn btn-success exchange-btn">Send Request</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Features Section -->
+<section class="section">
+  <div class="container">
+    <h2>Why Join Us?</h2>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="feature-box">
+          <h4><i class="fas fa-book"></i> Wide Collection</h4>
+          <p>Access a vast variety of books from different genres.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <h4><i class="fas fa-leaf"></i> Eco-Friendly</h4>
+          <p>Reduce waste and promote sustainability through book sharing.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <h4><i class="fas fa-users"></i> Community Driven</h4>
+          <p>Connect with like-minded book enthusiasts.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="section bg-light">
+  <div class="container">
+    <h2>What Users Say</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="testimonial">
+          <p>"This platform helped me find rare books and meet fellow book lovers!"</p>
+          <h5>- Sarah J.</h5>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="testimonial">
+          <p>"A fantastic initiative for book enthusiasts who love to share knowledge!"</p>
+          <h5>- Mark L.</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="hero" style="background-image: url('{% static 'images/fallon-michael-9afcGtLDf3I-unsplash.jpg' %}'); background-size: cover; background-position: center; background-attachment: fixed;">
+  <div class="container">
+    <h2>Start Your Book Exchange Journey Today!</h2>
+    <a href="{% url 'register' %}" class="btn btn-cta mt-3">Join Now</a>
+  </div>
+</section>
+
+{% include 'includes/footer.html' %}
+<!-- JavaScript for Exchange Modal -->
+{% comment %} <script>
+document.addEventListener('DOMContentLoaded', function () {
+  const exchangeModal = document.getElementById('exchangeModal');
+  if (exchangeModal) {
+    exchangeModal.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      const bookId = button.getAttribute('data-bookid');
+      const bookTitle = button.getAttribute('data-booktitle');  // <-- Fix: previously missing
+      const form = document.getElementById('exchangeForm');
+
+      // Set the form action dynamically
+      form.action = `/book/exchange_request/${bookId}/`;
+      document.getElementById('selectedBookId').value = bookId;
+      document.getElementById('exchangeBookTitle').innerText = bookTitle;
+
+      const seekerBooksSelect = document.getElementById('seekerBooks');
+      const ownerBooksList = document.getElementById('ownerBooksList');
+
+      fetch("{% url 'fetch_exchange_data' %}?book_id=" + bookId)
+        .then(response => response.json())
+        .then(data => {
+          // Populate seeker books
+          seekerBooksSelect.innerHTML = '';
+          const seekerBooks = data.seeker_books.filter(book => book.status !== 'Exchanged');
+          if (seekerBooks.length > 0) {
+            seekerBooks.forEach(book => {
+              const option = document.createElement('option');
+              option.value = book.id;
+              option.textContent = book.title;
+              seekerBooksSelect.appendChild(option);
+            });
+          } else {
+            const option = document.createElement('option');
+            option.textContent = 'No books available for exchange.';
+            option.disabled = true;
+            seekerBooksSelect.appendChild(option);
+          }
+
+          // Populate owner books
+          ownerBooksList.innerHTML = '';
+          if (data.owner_books.length > 0) {
+            data.owner_books.forEach(book => {
+              const li = document.createElement('li');
+              li.className = 'list-group-item';
+              li.textContent = book.title + (book.status === 'Exchanged' ? ' (Exchanged)' : '');
+              ownerBooksList.appendChild(li);
+            });
+          } else {
+            const li = document.createElement('li');
+            li.className = 'list-group-item text-muted';
+            li.textContent = 'No books listed by owner.';
+            ownerBooksList.appendChild(li);
+          }
+        })
+        .catch(error => {
+          console.error('Error fetching exchange data:', error);
+        });
+    });
+  }
+});
+</script> {% endcomment %}
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const exchangeModal = document.getElementById('exchangeModal');
+  if (exchangeModal) {
+    exchangeModal.addEventListener('show.bs.modal', function (event) {
+      const button = event.relatedTarget;
+      const bookId = button.getAttribute('data-bookid');
+      const bookTitle = button.getAttribute('data-booktitle');
+
+      document.getElementById('selectedBookId').value = bookId;
+      document.getElementById('exchangeBookTitle').innerText = bookTitle;
+
+      // Fetch user's own books (available for exchange)
+      fetch(`/get_user_books/?exclude=${bookId}`)
+        .then(response => response.json())
+        .then(data => {
+          const seekerBooksSelect = document.getElementById('seekerBooks');
+          seekerBooksSelect.innerHTML = '';
+          data.books.forEach(book => {
+            const option = document.createElement('option');
+            option.value = book.id;
+            option.textContent = `${book.title} by ${book.author}`;
+            seekerBooksSelect.appendChild(option);
+          });
+        })
+        .catch(error => {
+          console.error('Error fetching books:', error);
+        });
+    });
+  }
+});
+</script>

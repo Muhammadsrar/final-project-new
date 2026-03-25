@@ -1,0 +1,45 @@
+{% extends 'header.html' %}
+
+{% block content %}
+  <div class="container mt-5 form-container">
+    <div class="card form-card">
+      <div class="card-header form-card-header">Login</div>
+      <div class="card-body">
+        <!-- Display Django Messages -->
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <form method="post">
+          {% csrf_token %}
+
+          <!-- Username -->
+          <div class="mb-3">
+            <label class="form-label">Username</label>
+            <input type="text" name="username" class="form-control input-field" required />
+          </div>
+
+          <!-- Password -->
+          <div class="mb-3">
+            <label class="form-label">Password</label>
+            <input type="password" name="password" class="form-control input-field" required />
+          </div>
+
+          <!-- Submit Button -->
+          <button type="submit" class="btn form-btn w-100">Login</button>
+        </form>
+
+        <!-- Extra Links -->
+        <p class="text-center mt-3">
+          Don't have an account? <a href="{% url 'register' %}" class="form-link">Register</a><br />
+          <a href="{% url 'request_reset' %}" class="form-link">Forgot Password?</a>
+        </p>
+      </div>
+    </div>
+  </div>
+{% endblock %}

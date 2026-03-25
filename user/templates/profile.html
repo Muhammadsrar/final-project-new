@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-5 form-container">
+    <div class="card form-card">
+      <div class="card-header form-card-header">Profile</div>
+      <div class="card-body">
+        <!-- Success Messages -->
+        {% if messages %}
+          {% for message in messages %}
+            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+              {{ message }}
+              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+          {% endfor %}
+        {% endif %}
+
+        <!-- Form -->
+        <form method="POST" enctype="multipart/form-data" class="p-4">
+          {% csrf_token %}
+
+          <!-- Username -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Username</label>
+            <input type="text" name="{{ form.username.name }}" value="{{ form.username.value }}" class="form-control shadow-sm" />
+            {% if form.username.errors %}
+              <div class="text-danger small mt-1">{{ form.username.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Email</label>
+            <input type="email" name="{{ form.email.name }}" value="{{ form.email.value }}" class="form-control shadow-sm" />
+            {% if form.email.errors %}
+              <div class="text-danger small mt-1">{{ form.email.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- New Password -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">New Password <span class="text-muted small">(optional)</span></label>
+            <input type="password" name="{{ form.new_password.name }}" class="form-control shadow-sm" />
+          </div>
+
+          <!-- Confirm New Password -->
+          <div class="mb-3">
+            <label class="form-label fw-semibold">Confirm New Password</label>
+            <input type="password" name="{{ form.confirm_new_password.name }}" class="form-control shadow-sm" />
+            {% if form.confirm_new_password.errors %}
+              <div class="text-danger small mt-1">{{ form.confirm_new_password.errors }}</div>
+            {% endif %}
+          </div>
+
+          <!-- Submit Button -->
+          <div class="text-center mt-4">
+            <button type="submit" class="btn btn-success px-4 py-2 shadow-sm w-100" style="border-radius: 8px;">Update</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+{% endblock %}

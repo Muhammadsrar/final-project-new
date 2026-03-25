@@ -1,0 +1,316 @@
+body {
+  background-color: #f4f4f9;
+  font-family: Arial, sans-serif;
+}
+
+
+
+.navbar {
+  background-color: #31165d;
+  position: fixed;
+  padding: 10px;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+}
+
+.navbar-brand,
+.nav-link {
+  color: white !important;
+  ;
+}
+
+.hero {
+  background: linear-gradient(to right, #31165d, #af80ff);
+  color: white;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 3rem;
+  font-weight: bold;
+}
+
+.hero p {
+  font-size: 1.2rem;
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.btn-cta {
+  background-color: white;
+  color: #31165d;
+  font-weight: bold;
+  padding: 12px 30px;
+  border-radius: 30px;
+  transition: 0.3s;
+}
+
+.btn-cta:hover {
+  background-color: #af80ff;
+  color: white;
+}
+
+.section {
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.section h2 {
+  color: #31165d;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.feature-box {
+  background: white;
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.feature-icon {
+  font-size: 40px;
+  color: #af80ff;
+  margin-bottom: 10px;
+}
+
+.testimonial {
+  background: #af80ff;
+  color: white;
+  padding: 40px;
+  border-radius: 10px;
+}
+
+.testimonial p {
+  font-style: italic;
+}
+
+.footer {
+  background-color: #31165d;
+  color: white;
+  text-align: center;
+  padding: 20px 0;
+  margin-top: 30px;
+}
+
+/* Heading */
+.form-heading {
+  color: #31165d;
+  font-weight: bold;
+}
+
+/* Form Container */
+.form-container {
+  max-width: 600px;
+  margin: 40px auto;
+  margin-top: 5% !important;
+}
+
+/* Card Design */
+.form-card {
+  border-radius: 12px;
+  box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+  border: none;
+}
+
+/* Card Header */
+.form-card-header {
+  background-color: #af80ff;
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+  text-align: center;
+  border-radius: 12px 12px 0 0;
+  padding: 15px;
+}
+
+/* Form Fields */
+.form-label {
+  font-weight: 600;
+  color: #31165d;
+}
+
+.input-field {
+  border-radius: 8px;
+  border: 2px solid #af80ff;
+  padding: 10px;
+  transition: all 0.3s ease-in-out;
+}
+
+.input-field:focus {
+  border-color: #31165d;
+  box-shadow: 0 0 5px rgba(49, 22, 93, 0.5);
+}
+
+/* Button */
+.form-btn {
+  background-color: #31165d;
+  color: white;
+  font-weight: bold;
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  transition: all 0.3s ease-in-out;
+}
+
+.form-btn:hover {
+  background-color: #af80ff;
+  color: white;
+}
+
+/* Login Link */
+.form-link {
+  color: #31165d;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.form-link:hover {
+  color: #af80ff;
+  text-decoration: underline;
+}
+
+
+/* 
+
+.sidebar {
+  width: 250px;
+  background: #31165d;
+  color: white;
+  height: 100vh;
+  padding: 20px;
+  position: fixed;
+}
+
+.sidebar-title {
+  font-size: 1.4rem;
+  font-weight: bold;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+.nav-link {
+  color: white;
+  padding: 10px;
+  display: block;
+}
+
+.sidebar-link:hover {
+  background: #af80ff;
+  border-radius: 5px;
+}
+
+
+.main-content {
+  margin-left: 250px;
+  width: calc(100% - 250px);
+  padding: 20px;
+}
+
+
+.top-navbar {
+  background: #31165d;
+  color: white;
+  padding: 10px;
+}
+
+/* Table */
+.table {
+  background: white;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+/* Buttons */
+.btn-success {
+  background: #31165d;
+  border: none;
+}
+
+.btn-success:hover {
+  background: #af80ff;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar {
+    width: 200px;
+  }
+
+  .main-content {
+    margin-left: 200px;
+  }
+}
+
+
+footer {
+  background: #31165d;
+  color: white;
+  position: fixed;
+  padding: 10px;
+  bottom: 0;
+  width: 100%;
+}
+
+
+/* .sidebar {
+  width: 12%;
+}
+
+.content-area {
+  margin-left: 15%;
+  margin-top: 10%;
+
+} */
+
+*/ .bg-purple {
+  background-color: #af80ff;
+  /* Adjust background color */
+  color: white;
+  /* Adjust text color for contrast */
+}
+
+.header-container {
+  margin-left: 0% !important;
+}
+
+.rating {
+  font-size: 1.25rem;
+  color: #050505;
+}
+
+.rating .star {
+  margin: 0 2px;
+}
+
+.rating .filled {
+  color: #ffd700;
+}
+
+.hero {
+  background-image: url('{% static "images/1.jpg" %}');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.section.bg-light {
+  background-image: url("{% static 'images/2.jpg' %}");
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+}
+
+.btn-close {
+  color: red;
+}
+
+.btn-close:hover {
+  color: darkred;
+}
+
+.ms-sm-auto {
+  margin-top: 2% !important;
+}

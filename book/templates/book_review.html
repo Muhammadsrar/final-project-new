@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <div class="container mt-5 round border shadow p-0 content-area">
+    <div class="text-center form-card-header text-white rounded-top">
+      <h3>Reviews for "{{ book.title }}"</h3>
+    </div>
+
+    <div class="row p-4">
+      {% for review in reviews %}
+        <div class="col-md-6">
+          <div class="card shadow-lg mb-4 form-card">
+            <div class="form-card-header">Review by {{ review.reviewer.username }}</div>
+            <div class="card-body">
+              <p>
+                <strong>Rating:</strong>
+                <span class="rating">
+                  {% for i in '12345'|make_list %}
+                    <span class="star{% if forloop.counter <= review.rating %} filled{% endif %}">★</span>
+                  {% endfor %}
+                </span>
+              </p>
+              <p>
+                <strong>Comment:</strong> {{ review.review_text }}
+              </p>
+              <p class="rating"></p>
+              <p class="text-muted">
+                <small>Reviewed on: {{ review.created_at|date:'d M, Y' }}</small>
+              </p>
+            </div>
+          </div>
+        </div>
+      {% empty %}
+        <p class="text-center text-muted mt-3">No reviews for this book yet.</p>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}

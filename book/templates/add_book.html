@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+
+{% block title %}
+  Add New Book
+{% endblock %}
+
+{% block content %}
+  <div class="container-fluid mt-5">
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        <div class="card form-card shadow-lg">
+          <div class="card-header form-card-header text-center">
+            <h5 class="mb-0">Add New Book</h5>
+          </div>
+          <div class="card-body">
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% endfor %}
+            {% endif %}
+            <form method="POST" enctype="multipart/form-data" class="p-3">
+              {% csrf_token %}
+              {{ form.as_p }}
+              <div class="text-center mt-4">
+                <button type="submit" class="form-btn">Add Book</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

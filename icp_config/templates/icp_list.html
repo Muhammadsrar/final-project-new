@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}ICP Profiles List{% endblock %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="card shadow-lg">
+    <div class="card-header form-card-header text-center text-white">
+      <h3>All ICP Profiles</h3>
+    </div>
+    <div class="card-body">
+
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Industries</th>
+            <th>Company Size</th>
+            <th>Job Roles</th>
+            <th>Regions</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for profile in all_icps %}
+          <tr>
+            <td>{{ profile.user.username }}</td>
+            <td>{{ profile.target_industries }}</td>
+            <td>{{ profile.min_company_size }} - {{ profile.max_company_size }}</td>
+            <td>{{ profile.target_roles }}</td>
+            <td>{{ profile.target_regions}}</td>
+            <td>
+              <a href="{% url 'icp_edit' profile.id %}" class="btn btn-sm btn-primary">Edit</a>
+              <a href="{% url 'icp_delete' profile.id %}" class="btn btn-sm btn-danger" onclick="return confirm('Are you sure you want to delete this profile?');">Delete</a>
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5">No ICP profiles found.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+
+    </div>
+  </div>
+</div>
+{% endblock %}

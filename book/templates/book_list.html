@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container-fluid mt-5">
+  <div class="row">
+    
+ <div class="col-md-12 ms-sm-auto col-lg-12 px-md-4 py-4">
+        <div class="row justify-content-center">
+        <div class="col-md-12">
+          <div class="card shadow-lg">
+            <div class="card-header form-card-header text-center text-white">
+              <h3 class="mb-0">Available Books</h3>
+            </div>
+ <!-- Search -->
+      <div class="col-md-12 mb-4">
+          <div class="card-body">
+            <form id="navbarSearchForm" role="search" action="{% url 'search' %}">
+              <div class="input-group">
+                <input class="form-control" type="search" placeholder="Search books..." name="q" value="{{ query|default:'' }}" />
+                <button type="submit" class="btn form-btn"><i class="fas fa-search"></i></button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+            <div class="card-body">
+              {% if messages %}
+                {% for message in messages %}
+                  <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                    {{ message }}
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                  </div>
+                {% endfor %}
+              {% endif %}
+
+              {% if books %}
+                <div class="row row-cols-1 row-cols-md-3 g-4">
+                  {% for book in books %}
+                    <div class="col">
+                      <div class="card h-100 shadow-sm">
+                        <div class="card-header form-card-header text-white text-center p-1">
+                          <h5 class="m-0">{{ book.title }}</h5>
+                        </div>
+                        <div class="card-body">
+                          <img src="{% if book.image %}{{ book.image.url }}{% else %}{% static 'images/default-book.jpg' %}{% endif %}" alt="Book Image" class="img-fluid mb-3" />
+                          <p class="text-muted"><strong>Author:</strong> {{ book.author }}</p>
+                          <p class="text-muted"><strong>Genre:</strong> {{ book.genre }}</p>
+                          <span class="badge {% if book.status == 'Exchanged' %} bg-danger {% else %} bg-success {% endif %}">{{ book.status }}</span>
+                          <p class="mt-2"><strong>Location:</strong> {{ book.location }}</p>
+                          {%if book.url %}
+
+                            <p><strong>URL:</strong> <a href="{{ book.url }}" target="_blank">Click here</a></p>
+                          
+{% else %}
+                            <p><strong>No link available</p>
+{% endif %}
+                          <div class="d-flex justify-content-center gap-2 mt-3">
+                            <a href="{% url 'book_review' book.id %}" class="btn btn-success">Reviews</a>
+                            <a href="{% url 'book_details' book.id %}" class="btn btn-info">Details</a>
+                            <a href="{% url 'inbox' book.owner.id %}" class="btn btn-warning">Chat</a>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endfor %}
+                </div>
+              {% else %}
+                <div class="alert alert-info">No available books found.</div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+{% endblock %}

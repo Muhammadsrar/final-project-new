@@ -1,0 +1,163 @@
+<div class="wrapper">
+  <!-- Sidebar -->
+  {% include 'includes/sidebar.html' %}
+
+  <!-- Main Component -->
+  <div class="main">
+    {% include 'includes/header.html' %}
+
+    <main class="content px-3 py-2">
+      <div class="container-fluid mt-5">
+        <div class="row">
+          <div class="col-md-9 ms-sm-auto col-lg-10 px-md-4 py-5">
+            <h2 class="text-center">Welcome, {{ user.username }} - {{ user.user_type }}</h2>
+            <div class="row g-4 mt-3">
+              {% if request.user.is_superuser %}
+                <!-- Admin Dashboard -->
+                <div class="col-md-4">
+                  <div class="card border-0 shadow rounded-4 text-center">
+                    <div class="card-body">
+                      <h1 class="text-primary"><i class="fas fa-book"></i></h1>
+                      <h5 class="mt-3">Total Books</h5>
+                      <h3 class="text-dark fw-bold">{{ total_books }}</h3>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="card border-0 shadow rounded-4 text-center">
+                    <div class="card-body">
+                      <h1 class="text-info"><i class="fas fa-users"></i></h1>
+                      <h5 class="mt-3">Total Users</h5>
+                      <h3 class="text-dark fw-bold">{{ total_users }}</h3>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="card border-0 shadow rounded-4 text-center">
+                    <div class="card-body">
+                      <h1 class="text-warning"><i class="fas fa-comments"></i></h1>
+                      <h5 class="mt-3">Total Reviews</h5>
+                      <h3 class="text-dark fw-bold">{{ total_reviews }}</h3>
+                    </div>
+                  </div>
+                </div>
+              {% elif user.user_type == 'Owner' %}
+                <!-- Owner Dashboard -->
+                <div class="col-md-4">
+                  <div class="card border-0 shadow rounded-4 text-center">
+                    <div class="card-body">
+                      <h1 class="text-primary"><i class="fas fa-book"></i></h1>
+                      <h5 class="mt-3">My Books</h5>
+                      <h3 class="text-dark fw-bold">{{ owner_books_count }}</h3>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="card border-0 shadow rounded-4 text-center">
+                    <div class="card-body">
+                      <h1 class="text-danger"><i class="fas fa-exchange-alt"></i></h1>
+                      <h5 class="mt-3">Exchanged Requests</h5>
+                      <h3 class="text-dark fw-bold">{{ owner_exchange_requests }}</h3>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="card border-0 shadow rounded-4 text-center">
+                    <div class="card-body">
+                      <h1 class="text-success"><i class="fas fa-star"></i></h1>
+                      <h5 class="mt-3">My Book Reviews</h5>
+                      <h3 class="text-dark fw-bold">{{ owner_reviews }}</h3>
+                    </div>
+                  </div>
+                </div>
+              {% else %}
+                <!-- Seeker Dashboard -->
+                <div class="col-md-4">
+                  <div class="card border-0 shadow rounded-4 text-center">
+                    <div class="card-body">
+                      <h1 class="text-primary"><i class="fas fa-book"></i></h1>
+                      <h5 class="mt-3">Books Found</h5>
+                      <h3 class="text-dark fw-bold">{{ seeker_books_count }}</h3>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="col-md-4">
+                  <div class="card border-0 shadow rounded-4 text-center">
+                    <div class="card-body">
+                      <h1 class="text-danger"><i class="fas fa-exchange-alt"></i></h1>
+                      <h5 class="mt-3">Exchange Requests</h5>
+                      <h3 class="text-dark fw-bold">{{ seeker_exchange_requests }}</h3>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-md-4">
+                  <div class="card border-0 shadow rounded-4 text-center">
+                    <div class="card-body">
+                      <h1 class="text-success"><i class="fas fa-star"></i></h1>
+                      <h5 class="mt-3">Reviews on Found Books</h5>
+                      <h3 class="text-dark fw-bold">{{ seeker_reviews }}</h3>
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+
+              {% if not request.user.is_superuser %}
+                <!-- Notifications for all users except admin -->
+                <div class="col-md-4">
+                  <div class="card border-0 shadow rounded-4">
+                    <div class="card-header text-white form-card-header">
+                      <h5 class="mb-0">Notifications</h5>
+                    </div>
+                    <div class="card-body">
+                      {% if notifications %}
+                        <a href="#" class="text-decoration-none" data-bs-toggle="modal" data-bs-target="#notificationModal" id="notificationTrigger"><i class="fas fa-bell position-relative"><span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">{{ notifications.count }}</span></i></a>
+                      {% else %}
+                        <p>No notifications.</p>
+                      {% endif %}
+                    </div>
+                  </div>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<!-- Notification Modal -->
+<div class="modal fade" id="notificationModal" tabindex="-1" aria-labelledby="notificationModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="notificationModalLabel">Notifications</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="list-group" id="notificationList">
+          {% for notification in notifications %}
+            <li class="list-group-item {% if not notification.is_read %}bg-light{% endif %}">
+              <strong>{{ notification.date }}</strong>
+              <p>{{ notification.message }}</p>
+              {% if not notification.is_read %}
+                <a href="{% url 'mark_as_read' notification.id %}" class="btn btn-sm btn-success float-end">Mark as Read</a>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% include 'includes/footer.html' %}
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ENjdO4Dr2bkBIFxQpeoTz1HIcje39Wm4jDKdf19U8gI4ddQ3GYNS7NTKfAdVQSZe" crossorigin="anonymous"></script>
+<script src="script.js"></script>

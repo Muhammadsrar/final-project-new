@@ -1,0 +1,219 @@
+{% include 'includes/header.html' %}
+{% load static %}
+
+{% block content %}
+  <div class="container-fluid mt-5">
+    <div class="row">
+      {% include 'includes/sidebar.html' %}
+
+      <div class="col-md-12 ms-sm-auto col-lg-12 px-md-4 py-5py-4">
+        <div class="row justify-content-center">
+          <div class="col-md-12">
+            <div class="card shadow-lg">
+              <div class="card-header form-card-header text-center text-white">
+                <h3 class="mb-0">Search Result</h3>
+              </div>
+
+              <div class="card-body">
+                {% if books %}
+                  <div class="row row-cols-1 row-cols-md-3 g-4">
+                    {% for book in books %}
+                      <div class="col">
+                        <div class="card h-100 shadow-sm">
+                          <div class="card-header form-card-header text-white text-center p-1">
+                            <h5 class="m-0">{{ book.title }}</h5>
+                          </div>
+                          <div class="card-body">
+                            <img src="{% if book.image %}
+                                {{ book.image.url }}
+                              {% else %}
+                                {% static 'images/default-book.jpg' %}
+                              {% endif %}"
+                              alt="Book Image"
+                              class="img-fluid mb-3" />
+
+                            <p class="card-text text-muted">
+                              <strong>Author:</strong> {{ book.author }}
+                            </p>
+                            <p class="card-text text-muted">
+                              <strong>Genre:</strong> {{ book.genre }}
+                            </p>
+
+                            <span class="badge {% if book.status == 'Exchanged' %} bg-danger  {% else %} bg-success {% endif %}">
+                              {{ book.status }}
+                            </span>
+                            <p class="card-text mt-2">
+                              <strong>Location:</strong> {{ book.location }}
+                            </p>
+                            <p class="card-text">
+                              <strong>URL:</strong> <a href="{{ book.url }}" target="_blank">Click here</a>
+                            </p>
+
+                            <!-- Buttons Section -->
+                            <div class="d-flex justify-content-center gap-2 mt-3">
+                              <!-- View Details Button -->
+                              <button type="button" class="btn btn-info view-details-btn"
+                                data-bs-toggle="modal" data-bs-target="#bookDetailsModal"
+                                data-bookid="{{ book.id }}"
+                                data-title="{{ book.title }}"
+                                data-author="{{ book.author }}"
+                                data-genre="{{ book.genre }}"
+                                data-owner="{{ book.owner.username }}"
+                                data-location="{{ book.location }}"
+                                data-status="{{ book.status }}"
+                                data-url="{{ book.url }}"
+                                
+                                {% if book.image %} data-image="{{ book.image.url }}" {% else %} data-image="{% static 'images/default-book.jpg' %}" {% endif %}>
+                                Details
+                              </button>
+
+                              <!-- Request Exchange Button -->
+                              <button type="button" class="btn btn-success exchange-btn"
+                                data-bs-toggle="modal" data-bs-target="#exchangeModal"
+                                data-bookid="{{ book.id }}" data-booktitle="{{ book.title }}"
+                                {% if book.status == "Exchanged" %} disabled {% endif %}>
+                                Exchange
+                              </button>
+                              <a href="{% url 'inbox' book.owner.id %}" class="btn btn-warning">
+                                Chat
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+
+                     
+                    {% endfor %}
+                  </div>
+                {% else %}
+                  <div class="alert alert-info">No available books found.</div>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Book Details Modal -->
+  <div class="modal fade" id="bookDetailsModal" tabindex="-1" aria-labelledby="bookDetailsModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="bookDetailsModalLabel">Book Details</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <div class="row">
+            <div class="col-md-5">
+              <img id="bookImage" src="" class="img-fluid rounded shadow-sm" alt="Book Image">
+            </div>
+            <div class="col-md-7">
+              <h4 id="bookTitle"></h4>
+              <p><strong>Author:</strong> <span id="bookAuthor"></span></p>
+              <p><strong>Owner:</strong> <span id="bookOwner"></span></p>
+              <p><strong>Genre:</strong> <span id="bookGenre"></span></p>
+              <p><strong>Location:</strong> <span id="bookLocation"></span></p>
+              <p><strong>Status:</strong> <span id="bookStatus" class="badge"></span></p>
+              <hr>
+              <p><strong>More Details:</strong></p>
+              <p>
+                <a id="bookUrl" href="#" target="_blank" class="text-primary">Click here</a>
+              </p>
+            </div>
+            
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Exchange Modal -->
+  <div class="modal fade" id="exchangeModal" tabindex="-1" aria-labelledby="exchangeModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exchangeModalLabel">Request Exchange</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="POST" action="{% url 'exchange_request' %}">
+            {% csrf_token %}
+            <input type="hidden" name="book_id" id="selectedBookId" />
+            <p>Select a book you want to exchange for <strong id="exchangeBookTitle"></strong>:</p>
+            <select name="seeker_book_id" id="seekerBooks" class="form-select">
+              <option value="">No book available for exchange</option>
+            </select>
+            <div class="mt-3 text-center">
+              <button type="submit" class="btn btn-success">Confirm Exchange</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      // Book Details Modal
+      document.querySelectorAll('.view-details-btn').forEach(button => {
+        button.addEventListener('click', function () {
+          document.getElementById('bookImage').src = this.getAttribute('data-image');
+          document.getElementById('bookTitle').textContent = this.getAttribute('data-title');
+          document.getElementById('bookAuthor').textContent = this.getAttribute('data-author');
+          document.getElementById('bookGenre').textContent = this.getAttribute('data-genre');
+          document.getElementById('bookOwner').textContent = this.getAttribute('data-owner');
+          document.getElementById('bookLocation').textContent = this.getAttribute('data-location');
+          document.getElementById('bookStatus').textContent = this.getAttribute('data-status');
+          
+          let bookUrl = document.getElementById('bookUrl');
+          let url = this.getAttribute('data-url');
+          bookUrl.href = url; 
+          bookUrl.textContent = "Click here"; 
+  
+          // Status Badge Color
+          let statusBadge = document.getElementById('bookStatus');
+          if (this.getAttribute('data-status') === 'Exchanged') {
+            statusBadge.classList.add('bg-danger');
+            statusBadge.classList.remove('bg-success');
+          } else {
+            statusBadge.classList.add('bg-success');
+            statusBadge.classList.remove('bg-danger');
+          }
+        });
+      });
+  
+      // Exchange Modal
+      document.getElementById('exchangeModal').addEventListener('show.bs.modal', function (event) {
+        let button = event.relatedTarget;
+        let bookId = button.getAttribute('data-bookid');
+        let bookTitle = button.getAttribute('data-booktitle');
+  
+        document.getElementById('selectedBookId').value = bookId;
+        document.getElementById('exchangeBookTitle').innerText = bookTitle;
+  
+        fetch("{% url 'seeker_books' %}")
+          .then(response => response.json())
+          .then(data => {
+            let seekerBooks = document.getElementById('seekerBooks');
+            seekerBooks.innerHTML = '';
+  
+            // Filter books to show only those that are not exchanged
+            let availableBooks = data.books.filter(book => book.status !== 'Exchanged');
+  
+            if (availableBooks.length > 0) {
+              availableBooks.forEach(book => {
+                let option = document.createElement('option');
+                option.value = book.id;
+                option.textContent = book.title;
+                seekerBooks.appendChild(option);
+              });
+            } else {
+              seekerBooks.innerHTML = '<option value="">No books available for exchange.</option>';
+            }
+          });
+      });
+    });
+  </script>
+{% endblock %}

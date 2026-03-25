@@ -1,0 +1,198 @@
+{% include 'header.html' %}
+{% load static %}
+
+<!-- Hero Section -->
+<section class="hero" style="background-image: url('{% static 'images/2.jpg' %}'); background-size: cover; background-position: center; background-attachment: fixed;">
+  <div class="container">
+    <h1>Discover & Exchange Books</h1>
+    <p>Join a vibrant community of book lovers and start sharing books effortlessly.</p>
+    <a href="{% url 'register' %}" class="btn btn-cta mt-3">Get Started</a>
+  </div>
+</section>
+
+<!-- How It Works Section -->
+<section class="section bg-light">
+  <div class="container">
+    <h2>How It Works</h2>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="feature-box">
+          <div class="feature-icon">
+            <i class="fas fa-book"></i>
+          </div>
+          <h4>List Your Books</h4>
+          <p>Upload books you’re willing to exchange or give away.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <div class="feature-icon">
+            <i class="fas fa-search"></i>
+          </div>
+          <h4>Browse & Request</h4>
+          <p>Find books that interest you and request an exchange.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <div class="feature-icon">
+            <i class="fas fa-mail-bulk"></i>
+          </div>
+          <h4>Connect & Exchange</h4>
+          <p>Chat with book owners and arrange the exchange.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Book Search and Listing -->
+<section class="section bg-light">
+  <div class="container">
+    <div class="row">
+      <!-- Search -->
+      <div class="col-md-12 mb-4">
+        <div class="card shadow-lg">
+          <div class="card-body">
+            <form id="navbarSearchForm" role="search" action="{% url 'search_books' %}">
+              <div class="input-group">
+                <input class="form-control" type="search" placeholder="Search books..." name="q" value="{{ query|default:'' }}" />
+                <button type="submit" class="btn form-btn"><i class="fas fa-search"></i></button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Books -->
+      <div class="col-md-12">
+        <div class="card shadow-lg">
+          <div class="card-body">
+            {% if messages %}
+              {% for message in messages %}
+                <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                  {{ message }}
+                  <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                </div>
+              {% endfor %}
+            {% endif %}
+
+            {% if books %}
+              <div class="row row-cols-1 row-cols-md-3 g-4">
+                {% for book in books %}
+                  <div class="col">
+                    <div class="card h-100 shadow-sm">
+                      <div class="card-header form-card-header text-white text-center p-1">
+                        <h5 class="m-0">{{ book.title }}</h5>
+                      </div>
+                      <div class="card-body">
+                        <img src="{% if book.image %}
+                            {{ book.image.url }}
+                          {% else %}
+                            {% static 'images/default-book.jpg' %}
+                          {% endif %}"
+                          alt="Book Image"
+                          class="img-fluid mb-3" />
+                        <p class="text-muted">
+                          <strong>Author:</strong> {{ book.author }}
+                        </p>
+                        <p class="text-muted">
+                          <strong>Genre:</strong> {{ book.genre }}
+                        </p>
+                        <span class="badge {% if book.status == 'Exchanged' %}
+                            
+                            
+                             bg-danger
+
+
+                          {% else %}
+                            
+                            
+                             bg-success
+
+
+                          {% endif %}">
+                          {{ book.status }}
+                        </span>
+                        <p class="mt-2">
+                          <strong>Location:</strong> {{ book.location }}
+                        </p>
+                        <p>
+                          <strong>URL:</strong> <a href="{{ book.url }}" target="_blank">Click here</a>
+                        </p>
+
+                        <div class="d-flex justify-content-center gap-2 mt-3">
+                          <a href="{% url 'book_detail' book.id %}" class="btn btn-info">Details</a>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                {% endfor %}
+              </div>
+            {% else %}
+              <div class="alert alert-info">No available books found.</div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Features Section -->
+<section class="section">
+  <div class="container">
+    <h2>Why Join Us?</h2>
+    <div class="row">
+      <div class="col-md-4">
+        <div class="feature-box">
+          <h4><i class="fas fa-book"></i> Wide Collection</h4>
+          <p>Access a vast variety of books from different genres.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <h4><i class="fas fa-leaf"></i> Eco-Friendly</h4>
+          <p>Reduce waste and promote sustainability through book sharing.</p>
+        </div>
+      </div>
+      <div class="col-md-4">
+        <div class="feature-box">
+          <h4><i class="fas fa-users"></i> Community Driven</h4>
+          <p>Connect with like-minded book enthusiasts.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Testimonials Section -->
+<section class="section bg-light">
+  <div class="container">
+    <h2>What Users Say</h2>
+    <div class="row">
+      <div class="col-md-6">
+        <div class="testimonial">
+          <p>"This platform helped me find rare books and meet fellow book lovers!"</p>
+          <h5>- Sarah J.</h5>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="testimonial">
+          <p>"A fantastic initiative for book enthusiasts who love to share knowledge!"</p>
+          <h5>- Mark L.</h5>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section class="hero" style="background-image: url('{% static 'images/fallon-michael-9afcGtLDf3I-unsplash.jpg' %}'); background-size: cover; background-position: center; background-attachment: fixed;">
+  <div class="container">
+    <h2>Start Your Book Exchange Journey Today!</h2>
+    <a href="{% url 'register' %}" class="btn btn-cta mt-3">Join Now</a>
+  </div>
+</section>
+
+{% include 'footer.html' %}

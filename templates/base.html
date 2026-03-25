@@ -1,0 +1,132 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <title>
+      {% block title %}
+        Book Exchange
+      {% endblock %}
+    </title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" />
+
+    <link rel="stylesheet" href="{% static 'style.css' %}" />
+  </head>
+  <body>
+    <!-- Header -->
+    {% include 'header.html' %}
+
+    <div class="container-fluid mt-5">
+      <div class="row">
+        <!-- Sidebar -->
+
+        <nav class="col-md-2 d-none d-md-block sidebar p-3" style="min-height: 100vh;">
+          <div class="position-sticky">
+            <ul class="nav flex-column" id="sidebar">
+              {% if request.user.is_superuser %}
+                <!-- Superuser: Only Dashboard and Logout -->
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'dashboard' %}" class="sidebar-link"><i class="fa-solid fa-chart-line me-2"></i> Dashboard</a>
+                </li>
+              {% else %}
+                <!-- Wishlist Dropdown (Seeker Only) -->
+                {% if user.user_type == 'Seeker' %}
+                  <li class="nav-item">
+                    <a class="nav-link collapsed d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#wishlist" role="button" aria-expanded="false" aria-controls="wishlist">
+                      <span><i class="fa-solid fa-heart me-2"></i> Wishlist</span>
+                      <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                    </a>
+                    <div class="collapse" id="wishlist" data-bs-parent="#sidebar">
+                      <ul class="nav flex-column ms-3">
+                        <li class="nav-item">
+                          <a class="nav-link" href="{% url 'wishlist' %}"><i class="fa-solid fa-list me-2"></i> View Wishlist</a>
+                        </li>
+                        <li class="nav-item">
+                          <a class="nav-link" href="{% url 'add_wishlist' %}"><i class="fa-solid fa-plus me-2"></i> Add to Wishlist</a>
+                        </li>
+                      </ul>
+                    </div>
+                  </li>
+                {% endif %}
+       <li class="nav-item">
+                  <a class="nav-link collapsed d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#books" role="button" aria-expanded="false" aria-controls="books">
+                    <span><i class="fa-solid fa-book me-2"></i> ICP Config</span>
+                    <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                  </a>
+                  <div class="collapse" id="books" data-bs-parent="#sidebar">
+                    <ul class="nav flex-column ms-3">
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'icp_config' %}"><i class="fa-solid fa-plus me-2"></i> Create ICP</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'icp_list' %}"><i class="fa-solid fa-list me-2"></i> ICP List</a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                {% comment %} <!-- Books Dropdown -->
+                <li class="nav-item">
+                  <a class="nav-link collapsed d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#books" role="button" aria-expanded="false" aria-controls="books">
+                    <span><i class="fa-solid fa-book me-2"></i> Books</span>
+                    <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                  </a>
+                  <div class="collapse" id="books" data-bs-parent="#sidebar">
+                    <ul class="nav flex-column ms-3">
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'add_book' %}"><i class="fa-solid fa-plus me-2"></i> Add Book</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'my_books' %}"><i class="fa-solid fa-user me-2"></i> My Books</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'book_list' %}"><i class="fa-solid fa-list me-2"></i> Book List</a>
+                      </li>
+                    </ul>
+                  </div>
+                </li> {% endcomment %}
+                <!-- Exchange Dropdown -->
+                <li class="nav-item">
+                  <a class="nav-link collapsed d-flex justify-content-between align-items-center" data-bs-toggle="collapse" href="#exchange" role="button" aria-expanded="false" aria-controls="exchange">
+                    <span><i class="fa-solid fa-arrows-rotate me-2"></i> Exchange Requests</span>
+                    <i class="fa-solid fa-chevron-down arrow-icon"></i>
+                  </a>
+                  <div class="collapse" id="exchange" data-bs-parent="#sidebar">
+                    <ul class="nav flex-column ms-3">
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'exchange_status' %}"><i class="fa-solid fa-eye me-2"></i> View Requests</a>
+                      </li>
+                      <li class="nav-item">
+                        <a class="nav-link" href="{% url 'exchanged_books' %}"><i class="fa-solid fa-check me-2"></i> Exchanged Books</a>
+                      </li>
+                    </ul>
+                  </div>
+                </li>
+                <!-- Chats -->
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'chat_list' %}" class="sidebar-link"><i class="fa-solid fa-comments me-2"></i> Chats</a>
+                </li>
+
+                <!-- Reviews -->
+                <li class="nav-item">
+                  <a class="nav-link" href="{% url 'view_reviews' %}" class="sidebar-link"><i class="fa-solid fa-star me-2"></i> Reviews</a>
+                </li>
+              {% endif %}
+            </ul>
+          </div>
+        </nav>
+
+        <!-- Main content -->
+        <main class="col-md-10 ms-sm-auto col-lg-10 px-md-4 py-4">
+          {% block content %}
+
+          {% endblock %}
+        </main>
+      </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
